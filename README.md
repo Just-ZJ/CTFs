@@ -1,1 +1,6 @@
-# List of CTFs i have participated in
+# List of CTFs
+
+
+**2020**
+
+BuckeyeCTF AU20 (19<sup>th</sup>/32 - 216pts)
