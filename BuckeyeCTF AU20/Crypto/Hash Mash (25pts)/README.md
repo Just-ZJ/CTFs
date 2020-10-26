@@ -24,7 +24,7 @@ fc19318dd13128ce14344d066510a982269c241b sha1 good
 8fcd25a39d2037183044a8897e9a5333d727fded sha1 with  
 b295d117135a9763da282e7dae73a5ca7d3e5b11 sha1 salt
 
-Flag: osuctf{potato_hash_is_good_with_salt}
+**Flag: osuctf{potato_hash_is_good_with_salt}**
 
 Alternatively (My Solution):  
 Analyze Hash Type: [https://www.tunnelsup.com/hash-analyzer/](https://www.tunnelsup.com/hash-analyzer/)  
