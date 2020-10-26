@@ -9,7 +9,7 @@
 > osucyber.club  
 > live.osucyber.club
 
-## Solution
+## Solution (by bricks)
 
 Finding Subdomain:  
 [Sublist3r](https://github.com/aboul3la/Sublist3r)  
