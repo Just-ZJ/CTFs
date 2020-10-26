@@ -9,8 +9,7 @@ flag format is: osuctf{ANSWER}
 ## Solution (by b01lers)
 All we really need to do is go to: [https://en.wikipedia.org/wiki/Genetic_code#RNA_codon_table](https://en.wikipedia.org/wiki/Genetic_code#RNA_codon_table)
 
-And use the table to do:
-
+And use the table to do:  
 cca -> P Proline  
 uua -> L Leucine  
 gag -> E Glutamic Acid  
