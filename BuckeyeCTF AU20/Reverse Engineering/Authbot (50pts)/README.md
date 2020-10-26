@@ -16,11 +16,12 @@ $info
 
 A [link](https://github.com/qxxxb/auth_bot) was given when the command $info was sent in the autbot chat.
 
-If we look at the code, we see a hidden option that isn't listed: $debug_log
+If we [look at the code](https://github.com/Just-ZJ/CTFs/blob/main/BuckeyeCTF%20AU20/Reverse%20Engineering/Authbot%20(50pts)/auth_bot-master/main.py), we see a hidden option that isn't listed: $debug_log [Line 110]
 
 If we run that we get:  
-2020-10-23 23:39:08 INFO     Logged in as authbot#4452  
+> 2020-10-23 23:39:08 INFO     Logged in as authbot#4452  
 2020-10-23 23:39:13 DEBUG    User ath0#0294 authed as admin with password hash c023d5796452ad1d80263a05d11dc2a42b8c19c5d7c88c0e84ae3731b73a3d34  
+
 Puting c023d5796452ad1d80263a05d11dc2a42b8c19c5d7c88c0e84ae3731b73a3d34 into crackstation, we get the password gobucks.  
 Run $auth gobucks and we get access to the flag channel. 
 
