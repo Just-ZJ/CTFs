@@ -1,7 +1,16 @@
-# Postmodern Petri Dish
+# Solved Questions
 
-## Question
-> Connect with nc pwn.osucyber.club 13373
+## Crypto
+Hash Mash (25pts)  
 
-## Solution (by b01lers)
+## Reverse Engineering
+Authbot (50pts)  
 
+## Forensics
+Appetizing Donut Secret (50pts)
+
+## General Skills
+Magic Magic Bytes (10pts)  
+Tripped Over a String (10pts)  
+Cookie Monster Pt. 0 (10pts)  
+Logo (10pts)  
