@@ -22,7 +22,7 @@ If we send the command $debug_log at the authbot chat, we get:
 > 2020-10-23 23:39:08 INFO     Logged in as authbot#4452  
 2020-10-23 23:39:13 DEBUG    User ath0#0294 authed as admin with password hash c023d5796452ad1d80263a05d11dc2a42b8c19c5d7c88c0e84ae3731b73a3d34  
 
-Puting *c023d5796452ad1d80263a05d11dc2a42b8c19c5d7c88c0e84ae3731b73a3d34* into crackstation, we get the password gobucks.  
+Puting *c023d5796452ad1d80263a05d11dc2a42b8c19c5d7c88c0e84ae3731b73a3d34* into [crackstation](https://crackstation.net/), we get the password gobucks.  
 Run $auth gobucks and we get access to the flag channel. 
 
 **Flag: osuctf{d0n7_lOG_y0UR_Au7h_57r1Ngs}**
