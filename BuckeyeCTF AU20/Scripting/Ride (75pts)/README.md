@@ -29,5 +29,5 @@ This formats the file like so:
 39.9561122,-82.9995704
 39.9561573,-82.9993301
 ...
-Then we can load this value into Excel and plot it as a scatter plot. The resulting plot roughly resembles the osuctf prefix on the left, but is somewhat indecipherable. But you can actually flip the image vertically to get a better view. After that, it becomes clear that the text says: osuctf{OUTSID3}
+Then we can load this value into Excel and plot it as a scatter plot. The resulting plot roughly resembles the osuctf prefix on the left, but is somewhat indecipherable. But you can actually flip the image vertically to get a better view. After that, it becomes clear that the text says: osuctf{OUTSID3}   
 **Flag: osuctf{OUTSID3}**
