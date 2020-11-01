@@ -5,7 +5,7 @@
 > I may have gotten a bit lost on my way home  
 > Note: flag is osuctf{FLAG_IN_ALL_CAPS}
 
-## Solution
+## Solution (by bricks)
 At first glance, it seems to be a huge list of floating point numbers. But upon closer inspection is seems that the values between every other element only seem to change slightly. Based on the context of the problem, these values seem to be XY coordinates.
 
 To take advantage of this, we can first reformat the file using a simple script:
