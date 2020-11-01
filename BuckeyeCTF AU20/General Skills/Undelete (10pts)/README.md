@@ -3,6 +3,7 @@
 ## Question
 
 > Help! I want to learn about x86 internals, but I've accidentally deleted the lecture material. I know it used to be on this 256MB FAT32 partition somewhere...
+> File Download: https://drive.google.com/file/d/1J2MPeORRHaGFqBdIHR_ZP7KSDBhzN5nm/view?usp=sharing
 
 ## Solution (by b01lers)
 All we have to do is:
