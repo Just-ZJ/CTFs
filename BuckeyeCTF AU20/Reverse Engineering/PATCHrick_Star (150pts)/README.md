@@ -6,7 +6,7 @@
 
 ## Solution (by WCSC)
 
-For this challenge, you'll want some sort of software that's able to patch binaries. The demo version of binary ninja should work, but I did it using Ghidra and the awesome savePatch Plugin.
+For this challenge, you'll want some sort of software that's able to patch binaries. The demo version of [binary ninja](https://binary.ninja/) should work, but I did it using [Ghidra](https://ghidra-sre.org/) and the awesome savePatch Plugin.
 
 For this challenge, there are a few places you'll want to patch. The first will be the two calls to the function print_patrick. Just nop those out, they don't do anything.
 
@@ -21,8 +21,7 @@ Now, you can just run the program!
 
 ## Solution (by b01lers)
 
-Use binary ninja to patch out all of the 'nanosleep' calls.
-
+Use [binary ninja](https://binary.ninja/) to patch out all of the 'nanosleep' calls.  
 There were a couple calls in main, and one in in the call to decrypt_flag.
 
 ## Solution (by ripcrypto)
@@ -30,6 +29,7 @@ There were a couple calls in main, and one in in the call to decrypt_flag.
 So for this problem we were given a binary file. Running it through the file command lets us know it's an executable, and when we execute it in linux, it can't open the patrick1.txt and patrick2.txt files. I create those files, put "lol" in them, and the program runs normally, and prints an endless stream of spongebob "quotes". Opening the file in ghidra, I see where it decrypts and prints the flag. It won't get there though because its stuck in an infinite while loop printing spongebob quotes, so I just patched out the jump instruction that represented the while loop to a NOP instruction using ghidra's patch instruction function. I save the program, run it again, and get a little farther, but still get stuck after printing patrick2.txt. The decrypt_flag function, right above the printf that prints the flag, was locking up and waiting forever. I patched out the conditional that checks the time, and the nanosleep function call with nops, and it printed out the flag successfully.
 
 ## Solution (by Cyber@UC)
+
 ```
 patched the binary
 
