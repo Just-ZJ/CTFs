@@ -33,3 +33,13 @@ This formats the file like so:
 Then we can load this value into Excel and plot it as a scatter plot. The resulting plot roughly resembles the osuctf prefix on the left, but is somewhat indecipherable. But you can actually flip the image vertically to get a better view. After that, it becomes clear that the text says: osuctf{OUTSID3}   
 
 **Flag: osuctf{OUTSID3}**
+
+## Solution (by ripcrypto)
+1. recognize that the numbers are Lat-Long
+2. format the data into a CSV of Lat,Long\n pairs
+3. use online tool to plot lat-long CSV pairs
+4. read the map of the result
+
+## Solution (by Snack Overflow)
+I wrote a python script that took in the numbers from the input file and mapped them to x and y coordinates. Then I plotted it using the matplotlib.pyplot module. The resulting plot was upside-down, so I inverted all of the y coordinates. Then I got my answer. (It was barely legible, but I got it!)
+
