@@ -49,8 +49,9 @@ Looks like there was a hardcoded token that we could use for the API calls.
 I started by trying out every API call, with the token supplied. Eventually, I found that this gave me some interesting information with this call:
 
 $ curl "http://pwn.osucyber.club:13372/api/status?token=${token}"
-
+```
 {"status":0,"data":{"model":"Hot Stuff 1337","num_toasted":"279","serial":"60AKGPCIAX1AYIVN36M7MSIOXCRQ17ET2U17VUSS","time":"2020-10-24T04:28:11.762Z"}}
+```
 Cool, we got a serial number and the number of toasts toasted. Great. After some more poking around, we can see that api/generate_maintenance_token needs the serial number of the toaster. After supplying the serial number, we get a maintenance token: Ck2RtOs2RE1JTBnrOzEyaoC4fl8XfsyeoWtARkoc9ZAXwDAvyIHqMBzpBQhnYJT3ybXlu1BrbIfvVWPIkLpEdw.
 
 Now we can call api/download_backup with this new token:
