@@ -1,4 +1,4 @@
-# Authbot
+# Sus
 
 ## Question
 
