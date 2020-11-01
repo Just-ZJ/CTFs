@@ -1,9 +1,5 @@
 # Onion
 
-## Question
-
->
-
 ## Solution (by Cyber@UC)
 
 Onion writeup
