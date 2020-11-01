@@ -1,4 +1,4 @@
-# Cookie Monster Pt. 0
+# Cookie Monster Pt. 1
 
 ## Question
 
@@ -29,9 +29,9 @@ Our goal is to make sure that role is set to administrators. Oddly enough, the o
 
 Anyway, we need to make sure that when the cookie is decoded, it results in valid JSON with the correct role. Here is the code responsible for the decoding:
 ```
-cipher = AES.new(key=current_app.config['KEY'], mode=AES.MODE_ECB)
-cookie_data = pkcs7_unpad(cipher.decrypt(base64.b64decode(cookie)))
-return json.loads(cookie_data.decode('ascii', errors='replace'))
+cipher = AES.new(key=current_app.config['KEY'], mode=AES.MODE_ECB)   
+cookie_data = pkcs7_unpad(cipher.decrypt(base64.b64decode(cookie)))   
+return json.loads(cookie_data.decode('ascii', errors='replace'))  
 ```
 In summary:
 
@@ -58,14 +58,16 @@ So if we wanted to find the ciphertext of this plaintext block 1234567890123456,
 Now the trick is to come up with name values we can enter into the website that will result in the plaintext blocks we want.
 
 This turns out to be the hardest part. After playing around for a bit, it actually seems impossible to create inputs that result in the plaintext blocks we need. For example, one of the plaintext blocks we need is this:   
-> administrators",   
-
+```
+administrators",   
+```
 In order to obtain this block we need to supply a name like xxxxxx_administrators:
-
-> 1234567890123456
-> {"name":"xxxxxx_
-> administrators",
-> "role":"users"}
+```
+1234567890123456
+{"name":"xxxxxx_
+administrators",
+"role":"users"}
+```
 However, xxxxxx_administrators is 21 characters long, and the maximum allowed length is 20. Now it seems impossible to generate any useful plaintext blocks. I was stuck here for about 3 HOURS until I realized something about this line of code:
 ```
 if 5 <= len(username) <= 20:
