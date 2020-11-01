@@ -1,9 +1,5 @@
 # PATCHrick_Star
 
-## Question
-
->
-
 ## Solution (by WCSC)
 
 For this challenge, you'll want some sort of software that's able to patch binaries. The demo version of [binary ninja](https://binary.ninja/) should work, but I did it using [Ghidra](https://ghidra-sre.org/) and the awesome savePatch Plugin.
