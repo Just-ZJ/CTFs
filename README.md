@@ -1,4 +1,4 @@
-# List of CTFs
+# List of Competitions Joined
 
 
 **2020**
